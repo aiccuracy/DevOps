@@ -1,0 +1,29 @@
+{
+  "name": "devops",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aiccuracy/DevOps.git"
+  },
+  "author": "Soojin An",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aiccuracy/DevOps/issues"
+  },
+  "homepage": "https://github.com/aiccuracy/DevOps#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "config": "^3.3.7",
+    "express": "^4.17.3",
+    "js-yaml": "^4.1.0",
+    "mongodb": "^4.4.0",
+    "nodemon": "^2.0.15"
+  },
+  "keywords": []
+}
