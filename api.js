@@ -56,10 +56,11 @@ app.post('/users', async (req, res) => {
     }
 });
 
-app.put('/users', (req, res) => {
+app.put('/users/:id', (req, res) => {
+    const id = req.params.id;
     const name = req.body.name;
     const age = req.body.age;
-    db.collection('allUsers').updateOne({ name: name }, { $set: { age: age } }, (error, result) => {
+    db.collection('allUsers').updateOne({ _id: parseInt(id) }, { $set: { name: name, age: age } }, (error, result) => {
         if (error) { return es.send(false) }
         else if (result.modifiedCount === 1) { return res.send(true) }
         else { return res.send(false) };
