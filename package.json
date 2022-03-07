@@ -2,10 +2,10 @@
   "name": "devops",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node api.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "express": "^4.17.3",
     "js-yaml": "^4.1.0",
     "mongodb": "^4.4.0",
+    "mongoose": "^6.2.2",
     "nodemon": "^2.0.15"
   },
   "keywords": []
