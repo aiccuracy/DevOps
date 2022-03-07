@@ -1,0 +1,13 @@
+services:
+    node:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - "3000:3000"
+        container_name: node-container
+        # command:
+            # pm2-runtime start bin/www --watch --name main
+    mongo:
+        image: mongo
+        container_name: mongo-container
