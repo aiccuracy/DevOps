@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:alpine
 
 # create app directory
 RUN mkdir -p /app
@@ -13,4 +13,5 @@ COPY . /app
 EXPOSE 8001
 
 CMD ["npm", "run", "start"]
+
 

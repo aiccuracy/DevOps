@@ -23,7 +23,7 @@
     "express": "^4.17.3",
     "js-yaml": "^4.1.0",
     "mongodb": "^4.4.0",
-    "mongoose": "^6.2.2",
+    "mongoose": "^6.2.4",
     "nodemon": "^2.0.15"
   },
   "keywords": []
