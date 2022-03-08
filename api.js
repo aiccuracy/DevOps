@@ -10,33 +10,11 @@ const { request } = require('https');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var mongoose = require('mongoose');
-const { Int32 } = require('mongodb');
-var Schema = mongoose.Schema;
+const db = require('./db.js');
 
-mongoose.connect('mongodb://172.18.0.2/16', { useNewUrlParser: true });
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error: '));
-db.once('open', function () {
-    console.log("we are connected!")
-});
-
-
-var userSchema = new mongoose.Schema({
-    id: mongoose.Schema.Types.ObjectId,
-    name: { type: String, required: true, unique: true },
-    age: { type: Number }
+app.listen(8001, () => { 
+    console.log('Express App on port 8001!');
 })
-
-var userCount = new mongoose.Schema({
-    id: mongoose.Schema.Types.ObjectId,
-    name: String,
-    totalUser: {type: Number}
-})
-
-module.exports = mongoose.model('Users', userSchema)
-
 
 app.get('/users', async (req, res) => {
     db.collection('allUsers').find().toArray((error, result) => {
