@@ -1,0 +1,4 @@
+app:
+  port: 8001
+db:
+  connect: 'mongodb+srv://soojin:soojin@cluster.bxsxm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
