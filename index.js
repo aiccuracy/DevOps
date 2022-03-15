@@ -7,6 +7,8 @@ const config = require('config');
 mongoose.Promise = global.Promise;
 
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(require('./api'));
 app.use(function (err, req, res, next) {
