@@ -3,8 +3,12 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const config = require('config');
+// const config = require('config');
+const dotenv = require("dotenv");
+const path = require("path")
 mongoose.Promise = global.Promise;
+
+dotenv.config({ path: path.join(__dirname, '/.env') });
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));

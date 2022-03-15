@@ -5,7 +5,7 @@ const autoIdSetter = require('./auto-id-setter');
 
 const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
-    age: { type: Number }
+    age: { type: Number, default: null}
 });
 
 autoIdSetter(userSchema, mongoose, 'application', 'id');

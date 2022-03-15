@@ -25,14 +25,13 @@ router.get('/users/:id', async (req, res) => {
     })
 });
 
-router.post('/users/', async (req, res) => {
+router.post('/users', async (req, res) => {
     var user = new User();
     user.name = req.body.name;
     user.age = req.body.age;
 
     user.save(function (err) {
         if (err) {
-            console.error(err);
             res.json({ message: "Failed to post" });
             return;
         }
