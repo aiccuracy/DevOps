@@ -16,8 +16,6 @@ app.use(function (err, req, res, next) {
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// module.exports = router;
-
 mongoose.connect(config.db.connect, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
