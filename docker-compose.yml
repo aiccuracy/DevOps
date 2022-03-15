@@ -3,19 +3,20 @@ version: "3.7"
 services:
     node:
         image: aiccuracy/node
-        links: 
-            - mongodb
-        restart: always
         container_name: node
-        ports:
-            - "3000:3000"
-        depends_on:
-            - mongodb
         build:
             dockerfile: Dockerfile
+            context: .
+        ports:
+            - "3000:3000"
+        restart: always
+        links:
+            - mongodb
+        depends_on:
+            - mongodb
     mongodb:
         image: mongo
         container_name: mongo
-        restart: always
         ports:
             - "27017:27017"
+        restart: always
