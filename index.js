@@ -3,12 +3,10 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const config = require('config');
-const dotenv = require("dotenv");
+require('dotenv').config();
+
 const path = require("path")
 mongoose.Promise = global.Promise;
-
-dotenv.config({ path: path.join(__dirname, '/.env') });
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,7 +18,7 @@ app.use(function (err, req, res, next) {
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(config.db.connect, {
+mongoose.connect(process.env.production, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected!!')).catch(error => console.log(error))
