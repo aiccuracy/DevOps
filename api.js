@@ -26,7 +26,7 @@ router.get('/users/:id', async (req, res) => {
 });
 
 router.post('/users', async (req, res) => {
-    var user = new User();
+    const user = new User();
     user.name = req.body.name;
     user.age = req.body.age;
 
