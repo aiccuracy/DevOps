@@ -1,5 +1,3 @@
-const mongoose = require('./db.js');
-
 const userSchema = new mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true, unique: true },

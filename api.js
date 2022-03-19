@@ -1,21 +1,11 @@
 const express = require('express');
-const {readAll} = require('./db');
 const router = express.Router();
 const User = require('./models/user');
 
+
 router.get('/users', async (req, res) => {
-    const users = await readAll()
-    if (users.error) {
-        res.status(500).json({
-            message: error.message,
-            users: users.data
-        })
-    }
-    res.status(200).json({
-        message: 'success',
-        users: users.data
-    })
-})
+    res.send(await User.find({}))
+});
 
 router.get('/users/:id', async (req, res) => {
     User.findOne({ id: req.params.id }, function (err, user) {
