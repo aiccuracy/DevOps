@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(require('./api'));
+app.use('/users', require('./api'));
 
 
 mongoose.connect(process.env.production, {

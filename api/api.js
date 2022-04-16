@@ -3,71 +3,67 @@ const router = express.Router();
 const User = require('../models/user');
 
 
-router.get('/users', async (req, res) => {
+router.get('', async (req, res) => {
     res.send(await User.find({}))
 });
 
-router.get('/users/:id', (req, res, next) => { 
+router.get('/:id', (req, res, next) => { 
+    if (isNaN(parseInt(req.params.id))) {
+        return res.status(400).send({ message: 'Invalid user id.' });
+    }
     User.findOne({ id: req.params.id }, function (err, user) { 
-        if (isNaN(parseInt(req.params.id))) {
-            res.status(400).send({ message: "Invalid user id." });
-            return next(err);
-        }
+        if (err) return next(err);
         if (user == null) {
-            res.status(404).send({ message: "The user is not found." });
-            return next(err);
+            return res.status(404).send({ message: "The user is not found." });
         } 
         res.status(200).send(user);
     })
 })
 
-router.post('/users', async (req, res, next) => {
-    const user = new User();
-    const username = req.body.name;
-    user.name = username;
-    user.age = req.body.age;
-    const checkUser = await User.findOne({ name:username });
+router.post('', async (req, res, next) => {
+    if (req.body.name === undefined) {
+        return res.status(400).send({ message: '\'name\' parameter is empty.' });
+    }
+    if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
+        return res.status(400).send({ message: '\'age\' must be an integer.' });
+    }
+    const checkUser = await User.findOne({ 'name': req.body.name });
     if (checkUser !== null) {
-        res.status(409).send({ message: 'The user already exists.' });
-        return next();
+        return res.status(409).send({ message: 'The user already exists.' });
     }
-    if (username === undefined) {
-        res.status(400).send({ message: '\'name\' parameter is empty.' });
-        return next();
-    }
-    if (typeof(user.age) !== 'number') {
-        res.status(400).send({ message: '\'age\' must be an integer.' });
-        return next();
-    }
+    const user = new User();
+    user.name = req.body.name;
+    user.age = req.body.age;
 
-    user.save(() => {
+    user.save((err) => {
+        if (err) return next(err);
         res.status(200).send(user);
      })
 })
  
-router.put('/users/:id', async (req, res, next) => {
-    const username = req.body.name;
-    const checkUser = await User.findOne({ name: username });
-    if (checkUser !== null) {
-        res.status(409).send({ message: 'The user already exists.' });
-        return next();
+router.put('/:id', async (req, res, next) => {
+    if (req.body.name == undefined) {
+        return res.status(400).send({ message: '\'name\' parameter is empty.' });        
     }
-    if (isNaN(parseInt(req.params.id))) {
-        res.status(400).send({ message: 'Invalid user id.' });
-        return next();
-    }
-    
-    User.findOne({ id: req.params.id }, (err, user) => {
-        if (user === null) {
-            res.status(404).send({ message: 'The user is not found.' });
-            return next(err);
-        }
-        if (typeof (req.body.age) !== 'number') {
-            res.status(400).send({ message: '\'age\' must be an integer.' });
-            return next(err);
-        }
 
-        user.name = username;
+    if (isNaN(parseInt(req.params.id))) {
+        return res.status(400).send({ message: 'Invalid user id.' });
+    }
+    if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
+        return res.status(400).send({ message: '\'age\' must be an integer.' });
+    }
+
+    const checkUser = await User.findOne({ 'name': req.body.name });
+    if (checkUser !== null) {
+        return res.status(409).send({ message: 'The user already exists.' });
+    }
+
+    User.findOne({ id: req.params.id }, (err, user) => {
+        if (err) return next(err);
+        if (user === null) {
+            return res.status(404).send({ message: 'The user is not found.' });
+        }
+        user.name = req.body.name;
         user.age = req.body.age;
         user.save(() => {
             res.status(200).send(user);
@@ -75,16 +71,15 @@ router.put('/users/:id', async (req, res, next) => {
     });
 });
 
-router.delete('/users/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     if (isNaN(parseInt(req.params.id))) {
-        res.status(400).send({ message: 'Invalid user id.' });
-        return next();
+        return res.status(400).send({ message: 'Invalid user id.' });
     }
-
     User.findOne({ id: req.params.id }, (err, user) => {
-        if (user === null) {
-            res.status(404).send({ message: 'The user is not found.' });
+        if (err)
             return next(err);
+        if (user === null) {
+            return res.status(404).send({ message: 'The user is not found.' });
         }
         User.deleteOne({ id: req.params.id }, function (err, result) {
             if (err) return next(err);
@@ -99,7 +94,7 @@ router.use(function (err, req, res, next) {
         return next(err);
     }
     res.status(err.status);
-    res.render('error', { error: err });
+    res.json({ error: err });
 })
 
 
