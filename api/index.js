@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const path = require("path")
 mongoose.Promise = global.Promise;
 
 app.use(express.static('public'));
@@ -13,10 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(require('./api'));
-app.use(function (err, req, res, next) {
-    res.status(422).send({ error: err.message });
-});
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 mongoose.connect(process.env.production, {
     useNewUrlParser: true,
@@ -25,9 +21,10 @@ mongoose.connect(process.env.production, {
 
 
 app.get('/', (req, res) => { 
-    res.send('Start!')
+    res.status(200).send('OK');
 })
 
 app.listen(port, () => { 
     console.log(`Express App on port ${port}!`)
 })
+
