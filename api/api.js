@@ -75,7 +75,6 @@ router.put('/users/:id', async (req, res, next) => {
     });
 });
 
-// delete 부분 에러 핸들링!
 router.delete('/users/:id', async (req, res, next) => {
     if (isNaN(parseInt(req.params.id))) {
         res.status(400).send({ message: 'Invalid user id.' });
