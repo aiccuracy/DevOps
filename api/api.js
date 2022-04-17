@@ -1,23 +1,26 @@
 const express = require('express');
+const res = require('express/lib/response');
 const router = express.Router();
 const User = require('../models/user');
 
 
 router.get('', async (req, res) => {
-    res.send(await User.find({}))
+    res.send(await User.find({}));
 });
 
-router.get('/:id', (req, res, next) => { 
+router.get('/:id', async (req, res, next) => {
     if (isNaN(parseInt(req.params.id))) {
         return res.status(400).send({ message: 'Invalid user id.' });
     }
-    User.findOne({ id: req.params.id }, function (err, user) { 
-        if (err) return next(err);
-        if (user == null) {
-            return res.status(404).send({ message: "The user is not found." });
-        } 
-        res.status(200).send(user);
-    })
+    try {
+        const targetUser = await User.findOne({ 'id': req.params.id });
+        if (!targetUser) {
+            return res.status(404).send({ message: 'The user is not found.' });
+        }
+        res.status(200).send(targetUser);
+    } catch (err) {
+        return next(err);
+    }
 })
 
 router.post('', async (req, res, next) => {
@@ -27,18 +30,22 @@ router.post('', async (req, res, next) => {
     if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
         return res.status(400).send({ message: '\'age\' must be an integer.' });
     }
-    const checkUser = await User.findOne({ 'name': req.body.name });
-    if (checkUser !== null) {
-        return res.status(409).send({ message: 'The user already exists.' });
-    }
-    const user = new User();
-    user.name = req.body.name;
-    user.age = req.body.age;
+    try {
+        const checkUser = await User.findOne({ 'name': req.body.name });
+        if (checkUser) {
+            return res.status(409).send({ message: 'The user already exists.' });
+        }
 
-    user.save((err) => {
-        if (err) return next(err);
+        const user = new User();
+        user.name = req.body.name;
+        user.age = req.body.age;
+
+        await user.save();
         res.status(200).send(user);
-     })
+
+    } catch (err) {
+        return next(err);
+    }
 })
  
 router.put('/:id', async (req, res, next) => {
@@ -53,41 +60,47 @@ router.put('/:id', async (req, res, next) => {
         return res.status(400).send({ message: '\'age\' must be an integer.' });
     }
 
-    const checkUser = await User.findOne({ 'name': req.body.name });
-    if (checkUser !== null) {
-        return res.status(409).send({ message: 'The user already exists.' });
-    }
-
-    User.findOne({ id: req.params.id }, (err, user) => {
-        if (err) return next(err);
-        if (user === null) {
+    try { 
+        const targetUser = await User.findOne({ 'id': req.params.id });
+        if (!targetUser) {
             return res.status(404).send({ message: 'The user is not found.' });
         }
-        user.name = req.body.name;
-        user.age = req.body.age;
-        user.save(() => {
-            res.status(200).send(user);
-        });
-    });
+
+        const checkUser = await User.findOne({ 'name': req.body.name });
+        if (checkUser) {
+            return res.status(409).send({ message: 'The user already exists.' });
+        } 
+
+        targetUser.name = req.body.name;
+        targetUser.age = req.body.age;
+
+        await targetUser.save();
+        return res.status(200).send(targetUser);
+
+    } catch (err) {
+        return next(err);
+    }
 });
 
 router.delete('/:id', async (req, res, next) => {
     if (isNaN(parseInt(req.params.id))) {
         return res.status(400).send({ message: 'Invalid user id.' });
     }
-    User.findOne({ id: req.params.id }, (err, user) => {
-        if (err)
-            return next(err);
-        if (user === null) {
+    try {
+        const targetUser = await User.findOne({ 'id': req.params.id });
+        if (!targetUser) {
             return res.status(404).send({ message: 'The user is not found.' });
         }
-        User.deleteOne({ id: req.params.id }, function (err, result) {
-            if (err) return next(err);
-            res.status(200).send({'id': user.id, 'name': user.name, 'age': user.age});
-        });
-    })
 
+        const deleteUser = await User.deleteOne({ 'id': req.params.id });
+        if (deleteUser.deletedCount === 1) {
+            res.status(200).send({ 'id': targetUser.id, 'name': targetUser.name, 'age': targetUser.age });
+        }
+    } catch (err) {
+        return next(err);
+    }
 });
+
 
 router.use(function (err, req, res, next) {
     if (res.headersSent) {
@@ -96,6 +109,5 @@ router.use(function (err, req, res, next) {
     res.status(err.status);
     res.json({ error: err });
 })
-
 
 module.exports = router;
