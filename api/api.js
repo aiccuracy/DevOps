@@ -9,11 +9,10 @@ router.get("", async (req, res) => {
 });
 
 router.get("/:id", async (req, res, next) => {
-    if (isNaN(parseInt(req.params.id))) {
-        const err = new InputError("Invalid user id.");
-        next(err);
-    }
     try {
+        if (isNaN(parseInt(req.params.id))) {
+            throw new InputError("Invalid user id.");
+        }
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
             throw new NotFoundError("User not found.");
@@ -25,15 +24,14 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("", async (req, res, next) => {
-    if (req.body.name === undefined) {
-        const err = new InputError("'name' parameter is empty.");
-        next(err);
-    }
-    if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
-        const err = new InputError("'age' must be an integer.");
-        next(err);
-    }
     try {
+        if (req.body.name === undefined) {
+            throw new InputError("'name' parameter is empty.");
+        }
+        if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
+            throw new InputError("'age' must be an integer.");
+        }
+
         const checkUser = await User.findOne({ name: req.body.name });
         if (checkUser) {
             throw new DuplicateError("The user already exists.");
@@ -51,21 +49,18 @@ router.post("", async (req, res, next) => {
 });
 
 router.put("/:id", async (req, res, next) => {
-    if (req.body.name == undefined) {
-        const err = new InputError("'name' parameter is empty.");
-        next(err);
-    }
-
-    if (isNaN(parseInt(req.params.id))) {
-        const err = new InputError("Invalid user id.");
-        next(err);
-    }
-    if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
-        const err = new InputError("'age' must be an integer.");
-        next(err);
-    }
-
     try {
+        if (req.body.name == undefined) {
+            throw new InputError("'name' parameter is empty.");
+        }
+
+        if (isNaN(parseInt(req.params.id))) {
+            throw new InputError("Invalid user id.");
+        }
+        if (!Number.isInteger(req.body.age) || req.body.age <= 0) {
+            throw new InputError("'age' must be an integer.");
+        }
+
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
             throw new NotFoundError("User not found.");
@@ -87,11 +82,10 @@ router.put("/:id", async (req, res, next) => {
 });
 
 router.delete("/:id", async (req, res, next) => {
-    if (isNaN(parseInt(req.params.id))) {
-        const err = new InputError("Invalid user id.");
-        next(err);
-    }
     try {
+        if (isNaN(parseInt(req.params.id))) {
+            throw new InputError("Invalid user id.");
+        }
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
             throw new NotFoundError("User not found.");
