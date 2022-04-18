@@ -95,6 +95,8 @@ router.delete('/:id', async (req, res, next) => {
         const deleteUser = await User.deleteOne({ 'id': req.params.id });
         if (deleteUser.deletedCount === 1) {
             res.status(200).send({ 'id': targetUser.id, 'name': targetUser.name, 'age': targetUser.age });
+        } else {
+            res.status(404).send({ message: 'The user is not found.' });
         }
     } catch (err) {
         return next(err);
