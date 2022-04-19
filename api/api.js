@@ -15,7 +15,7 @@ router.get("/:id", async (req, res, next) => {
         }
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
-            throw new NotFoundError("User not found.");
+            throw new NotFoundError();
         }
         res.status(200).send(targetUser);
     } catch (err) {
@@ -34,7 +34,7 @@ router.post("", async (req, res, next) => {
 
         const checkUser = await User.findOne({ name: req.body.name });
         if (checkUser) {
-            throw new DuplicateError("The user already exists.");
+            throw new DuplicateError();
         }
 
         const user = new User();
@@ -63,12 +63,12 @@ router.put("/:id", async (req, res, next) => {
 
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
-            throw new NotFoundError("User not found.");
+            throw new NotFoundError();
         }
 
         const checkUser = await User.findOne({ name: req.body.name });
         if (checkUser) {
-            throw new DuplicateError("The user already exists.");
+            throw new DuplicateError();
         }
 
         targetUser.name = req.body.name;
@@ -88,14 +88,14 @@ router.delete("/:id", async (req, res, next) => {
         }
         const targetUser = await User.findOne({ id: req.params.id });
         if (!targetUser) {
-            throw new NotFoundError("User not found.");
+            throw new NotFoundError();
         }
 
         const deleteUser = await User.deleteOne({ id: req.params.id });
         if (deleteUser.deletedCount === 1) {
             res.status(200).send({ id: targetUser.id, name: targetUser.name, age: targetUser.age });
         } else {
-            throw new NotFoundError("User not found.");
+            throw new NotFoundError();
         }
     } catch (err) {
         return next(err);

@@ -1,7 +1,8 @@
 class NotFoundError extends Error {
-    constructor(message) {
-        super(message);
+    constructor() {
+        super();
         this.status = 404;
+        this.message = "User not found";
     }
 }
 
@@ -13,9 +14,10 @@ class InputError extends Error {
 }
 
 class DuplicateError extends Error {
-    constructor(message) {
-        super(message);
+    constructor() {
+        super();
         this.status = 409;
+        this.message = "The user already exists.";
     }
 }
 
